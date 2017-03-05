@@ -1,0 +1,124 @@
+
+This script evaluates the performance of the custom heuristic function by
+comparing the strength of an agent using iterative deepening (ID) search with
+alpha-beta pruning against the strength rating of agents using other heuristic
+functions.  The `ID_Improved` agent provides a baseline by measuring the
+performance of a basic agent using Iterative Deepening and the "improved"
+heuristic (from lecture) on your hardware.  The `Student` agent then measures
+the performance of Iterative Deepening and the custom heuristic against the
+same opponents.
+
+
+*************************
+   Evaluating: Student   
+*************************
+
+Playing Matches:
+----------
+  Match 1:   Student   vs   Random    	Result: 75 to 5
+  Match 2:   Student   vs   MM_Null   	Result: 75 to 5
+  Match 3:   Student   vs   MM_Open   	Result: 53 to 27
+  Match 4:   Student   vs MM_Improved 	Result: 57 to 23
+  Match 5:   Student   vs   AB_Null   	Result: 65 to 15
+  Match 6:   Student   vs   AB_Open   	Result: 50 to 30
+  Match 7:   Student   vs AB_Improved 	Result: 37 to 43
+
+
+Results:
+----------
+Student             73.57%
+
+*************************
+ Evaluating: ID_Improved 
+*************************
+
+Playing Matches:
+----------
+  Match 1: ID_Improved vs   Random    	Result: 72 to 8
+  Match 2: ID_Improved vs   MM_Null   	Result: 75 to 5
+  Match 3: ID_Improved vs   MM_Open   	Result: 57 to 23
+  Match 4: ID_Improved vs MM_Improved 	Result: 57 to 23
+  Match 5: ID_Improved vs   AB_Null   	Result: 64 to 16
+  Match 6: ID_Improved vs   AB_Open   	Result: 48 to 32
+  Match 7: ID_Improved vs AB_Improved 	Result: 39 to 41
+
+
+Results:
+----------
+ID_Improved         73.57%
+
+*************************
+Evaluating: Student_coef 
+*************************
+
+Playing Matches:
+----------
+  Match 1: Student_coef vs   Random    	Result: 67 to 13
+  Match 2: Student_coef vs   MM_Null   	Result: 65 to 15
+  Match 3: Student_coef vs   MM_Open   	Result: 47 to 33
+  Match 4: Student_coef vs MM_Improved 	Result: 43 to 37
+  Match 5: Student_coef vs   AB_Null   	Result: 65 to 15
+  Match 6: Student_coef vs   AB_Open   	Result: 45 to 35
+  Match 7: Student_coef vs AB_Improved 	Result: 39 to 41
+
+
+Results:
+----------
+Student_coef        66.25%
+
+*************************
+Evaluating: Student_coef_p
+*************************
+
+Playing Matches:
+----------
+  Match 1: Student_coef_p vs   Random    	Result: 66 to 14
+  Match 2: Student_coef_p vs   MM_Null   	Result: 70 to 10
+  Match 3: Student_coef_p vs   MM_Open   	Result: 43 to 37
+  Match 4: Student_coef_p vs MM_Improved 	Result: 41 to 39
+  Match 5: Student_coef_p vs   AB_Null   	Result: 64 to 16
+  Match 6: Student_coef_p vs   AB_Open   	Result: 45 to 35
+  Match 7: Student_coef_p vs AB_Improved 	Result: 39 to 41
+
+
+Results:
+----------
+Student_coef_p      65.71%
+
+*************************
+Evaluating: Student_coef_1_p
+*************************
+
+Playing Matches:
+----------
+  Match 1: Student_coef_1_p vs   Random    	Result: 64 to 16
+  Match 2: Student_coef_1_p vs   MM_Null   	Result: 63 to 17
+  Match 3: Student_coef_1_p vs   MM_Open   	Result: 43 to 37
+  Match 4: Student_coef_1_p vs MM_Improved 	Result: 39 to 41
+  Match 5: Student_coef_1_p vs   AB_Null   	Result: 55 to 25
+  Match 6: Student_coef_1_p vs   AB_Open   	Result: 46 to 34
+  Match 7: Student_coef_1_p vs AB_Improved 	Result: 26 to 54
+
+
+Results:
+----------
+Student_coef_1_p     60.00%
+
+*************************
+Evaluating: Student_coef_05_p
+*************************
+
+Playing Matches:
+----------
+  Match 1: Student_coef_05_p vs   Random    	Result: 65 to 15
+  Match 2: Student_coef_05_p vs   MM_Null   	Result: 67 to 13
+  Match 3: Student_coef_05_p vs   MM_Open   	Result: 44 to 36
+  Match 4: Student_coef_05_p vs MM_Improved 	Result: 36 to 44
+  Match 5: Student_coef_05_p vs   AB_Null   	Result: 58 to 22
+  Match 6: Student_coef_05_p vs   AB_Open   	Result: 39 to 41
+  Match 7: Student_coef_05_p vs AB_Improved 	Result: 31 to 49
+
+
+Results:
+----------
+Student_coef_05_p     60.71%

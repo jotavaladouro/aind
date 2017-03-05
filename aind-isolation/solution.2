@@ -1,0 +1,124 @@
+
+This script evaluates the performance of the custom heuristic function by
+comparing the strength of an agent using iterative deepening (ID) search with
+alpha-beta pruning against the strength rating of agents using other heuristic
+functions.  The `ID_Improved` agent provides a baseline by measuring the
+performance of a basic agent using Iterative Deepening and the "improved"
+heuristic (from lecture) on your hardware.  The `Student` agent then measures
+the performance of Iterative Deepening and the custom heuristic against the
+same opponents.
+
+
+*************************
+   Evaluating: Student   
+*************************
+
+Playing Matches:
+----------
+  Match 1:   Student   vs   Random    	Result: 64 to 16 100.70624999999998 800
+  Match 2:   Student   vs   MM_Null   	Result: 64 to 16 71.68820861678013 1764
+  Match 3:   Student   vs   MM_Open   	Result: 46 to 34 60.70101229211857 2766
+  Match 4:   Student   vs MM_Improved 	Result: 44 to 36 55.4679173463839 3678
+  Match 5:   Student   vs   AB_Null   	Result: 62 to 18 49.81287553648068 4660
+  Match 6:   Student   vs   AB_Open   	Result: 44 to 36 46.34278624601193 5642
+  Match 7:   Student   vs AB_Improved 	Result: 39 to 41 44.28986609860004 6572
+
+
+Results:
+----------
+Student             64.82%
+
+*************************
+ Evaluating: ID_Improved 
+*************************
+
+Playing Matches:
+----------
+  Match 1: ID_Improved vs   Random    	Result: 76 to 4 114.36191536748333 898
+  Match 2: ID_Improved vs   MM_Null   	Result: 66 to 14 83.47320954907164 1885
+  Match 3: ID_Improved vs   MM_Open   	Result: 58 to 22 71.03407557354907 2964
+  Match 4: ID_Improved vs MM_Improved 	Result: 44 to 36 63.02774306423387 4001
+  Match 5: ID_Improved vs   AB_Null   	Result: 64 to 16 56.640780565511704 5022
+  Match 6: ID_Improved vs   AB_Open   	Result: 48 to 32 52.55733906999831 6043
+  Match 7: ID_Improved vs AB_Improved 	Result: 52 to 28 49.41250530485214 7069
+
+
+Results:
+----------
+ID_Improved         72.86%
+
+*************************
+  Evaluating: Student_1  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_1  vs   Random    	Result: 69 to 11 99.2375886524823 846
+  Match 2:  Student_1  vs   MM_Null   	Result: 66 to 14 73.38529088913285 1822
+  Match 3:  Student_1  vs   MM_Open   	Result: 47 to 33 62.50651637900675 2839
+  Match 4:  Student_1  vs MM_Improved 	Result: 48 to 32 57.39100888656564 3826
+  Match 5:  Student_1  vs   AB_Null   	Result: 58 to 22 51.77093802345062 4776
+  Match 6:  Student_1  vs   AB_Open   	Result: 48 to 32 48.11537793223291 5755
+  Match 7:  Student_1  vs AB_Improved 	Result: 37 to 43 45.22990063233972 6642
+
+
+Results:
+----------
+Student_1           66.61%
+
+*************************
+  Evaluating: Student_2  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_2  vs   Random    	Result: 69 to 11 104.67077681874225 811
+  Match 2:  Student_2  vs   MM_Null   	Result: 61 to 19 76.09391007398972 1757
+  Match 3:  Student_2  vs   MM_Open   	Result: 48 to 32 66.07869339272476 2694
+  Match 4:  Student_2  vs MM_Improved 	Result: 49 to 31 60.68697307587719 3677
+  Match 5:  Student_2  vs   AB_Null   	Result: 61 to 19 54.33678086619278 4641
+  Match 6:  Student_2  vs   AB_Open   	Result: 49 to 31 50.2414285714287 5600
+  Match 7:  Student_2  vs AB_Improved 	Result: 32 to 48 47.139677666922594 6515
+
+
+Results:
+----------
+Student_2           65.89%
+
+*************************
+  Evaluating: Student_3  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_3  vs   Random    	Result: 72 to 8 109.48448687350839 838
+  Match 2:  Student_3  vs   MM_Null   	Result: 66 to 14 77.73359288097896 1798
+  Match 3:  Student_3  vs   MM_Open   	Result: 41 to 39 64.5299556213019 2704
+  Match 4:  Student_3  vs MM_Improved 	Result: 40 to 40 58.620462046204736 3636
+  Match 5:  Student_3  vs   AB_Null   	Result: 55 to 25 52.26673913043488 4600
+  Match 6:  Student_3  vs   AB_Open   	Result: 42 to 38 48.09051412020281 5524
+  Match 7:  Student_3  vs AB_Improved 	Result: 33 to 47 45.39221838719805 6374
+
+
+Results:
+----------
+Student_3           62.32%
+
+*************************
+  Evaluating: Student_4  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_4  vs   Random    	Result: 73 to 7 108.96483516483516 910
+  Match 2:  Student_4  vs   MM_Null   	Result: 63 to 17 80.34469898774644 1877
+  Match 3:  Student_4  vs   MM_Open   	Result: 46 to 34 68.93110949963749 2758
+  Match 4:  Student_4  vs MM_Improved 	Result: 42 to 38 62.28288931612195 3641
+  Match 5:  Student_4  vs   AB_Null   	Result: 59 to 21 55.315676603045276 4663
+  Match 6:  Student_4  vs   AB_Open   	Result: 42 to 38 50.90342734737596 5602
+  Match 7:  Student_4  vs AB_Improved 	Result: 44 to 36 48.29173118612575 6458
+
+
+Results:
+----------
+Student_4           65.89%

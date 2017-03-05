@@ -1,0 +1,124 @@
+
+This script evaluates the performance of the custom heuristic function by
+comparing the strength of an agent using iterative deepening (ID) search with
+alpha-beta pruning against the strength rating of agents using other heuristic
+functions.  The `ID_Improved` agent provides a baseline by measuring the
+performance of a basic agent using Iterative Deepening and the "improved"
+heuristic (from lecture) on your hardware.  The `Student` agent then measures
+the performance of Iterative Deepening and the custom heuristic against the
+same opponents.
+
+
+*************************
+   Evaluating: Student   
+*************************
+
+Playing Matches:
+----------
+  Match 1:   Student   vs   Random    	Result: 17 to 3
+  Match 2:   Student   vs   MM_Null   	Result: 14 to 6
+  Match 3:   Student   vs   MM_Open   	Result: 6 to 14
+  Match 4:   Student   vs MM_Improved 	Result: 9 to 11
+  Match 5:   Student   vs   AB_Null   	Result: 12 to 8
+  Match 6:   Student   vs   AB_Open   	Result: 11 to 9
+  Match 7:   Student   vs AB_Improved 	Result: 13 to 7
+
+
+Results:
+----------
+Student             58.57%
+
+*************************
+ Evaluating: ID_Improved 
+*************************
+
+Playing Matches:
+----------
+  Match 1: ID_Improved vs   Random    	Result: 18 to 2
+  Match 2: ID_Improved vs   MM_Null   	Result: 20 to 0
+  Match 3: ID_Improved vs   MM_Open   	Result: 14 to 6
+  Match 4: ID_Improved vs MM_Improved 	Result: 16 to 4
+  Match 5: ID_Improved vs   AB_Null   	Result: 17 to 3
+  Match 6: ID_Improved vs   AB_Open   	Result: 14 to 6
+  Match 7: ID_Improved vs AB_Improved 	Result: 14 to 6
+
+
+Results:
+----------
+ID_Improved         80.71%
+
+*************************
+  Evaluating: Student_1  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_1  vs   Random    	Result: 18 to 2
+  Match 2:  Student_1  vs   MM_Null   	Result: 18 to 2
+  Match 3:  Student_1  vs   MM_Open   	Result: 10 to 10
+  Match 4:  Student_1  vs MM_Improved 	Result: 10 to 10
+  Match 5:  Student_1  vs   AB_Null   	Result: 12 to 8
+  Match 6:  Student_1  vs   AB_Open   	Result: 12 to 8
+  Match 7:  Student_1  vs AB_Improved 	Result: 11 to 9
+
+
+Results:
+----------
+Student_1           65.00%
+
+*************************
+  Evaluating: Student_2  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_2  vs   Random    	Result: 18 to 2
+  Match 2:  Student_2  vs   MM_Null   	Result: 17 to 3
+  Match 3:  Student_2  vs   MM_Open   	Result: 12 to 8
+  Match 4:  Student_2  vs MM_Improved 	Result: 14 to 6
+  Match 5:  Student_2  vs   AB_Null   	Result: 12 to 8
+  Match 6:  Student_2  vs   AB_Open   	Result: 13 to 7
+  Match 7:  Student_2  vs AB_Improved 	Result: 9 to 11
+
+
+Results:
+----------
+Student_2           67.86%
+
+*************************
+  Evaluating: Student_3  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_3  vs   Random    	Result: 18 to 2
+  Match 2:  Student_3  vs   MM_Null   	Result: 20 to 0
+  Match 3:  Student_3  vs   MM_Open   	Result: 16 to 4
+  Match 4:  Student_3  vs MM_Improved 	Result: 14 to 6
+  Match 5:  Student_3  vs   AB_Null   	Result: 17 to 3
+  Match 6:  Student_3  vs   AB_Open   	Result: 10 to 10
+  Match 7:  Student_3  vs AB_Improved 	Result: 8 to 12
+
+
+Results:
+----------
+Student_3           73.57%
+
+*************************
+  Evaluating: Student_4  
+*************************
+
+Playing Matches:
+----------
+  Match 1:  Student_4  vs   Random    	Result: 14 to 6
+  Match 2:  Student_4  vs   MM_Null   	Result: 16 to 4
+  Match 3:  Student_4  vs   MM_Open   	Result: 9 to 11
+  Match 4:  Student_4  vs MM_Improved 	Result: 10 to 10
+  Match 5:  Student_4  vs   AB_Null   	Result: 18 to 2
+  Match 6:  Student_4  vs   AB_Open   	Result: 9 to 11
+  Match 7:  Student_4  vs AB_Improved 	Result: 9 to 11
+
+
+Results:
+----------
+Student_4           60.71%
