@@ -51,7 +51,7 @@ class AirCargoProblem(Problem):
         # for example, the action schema 'Load(c, p, a)' can represent the concrete actions 'Load(C1, P1, SFO)'
         # or 'Load(C2, P2, JFK)'.  The actions for the planning problem must be concrete because the problems in
         # forward search and Planning Graphs must use Propositional Logic
-        
+
 
         def load_actions():
             '''Create all concrete Load actions and return a list
@@ -62,7 +62,7 @@ class AirCargoProblem(Problem):
             for a in self.airports:
                 for c in self.cargos:
                     for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(c, a)),expr("At({}, {})".format(p, a)) 
+                            precond_pos = [expr("At({}, {})".format(c, a)),expr("At({}, {})".format(p, a))
                                            ]
                             precond_neg = []
                             effect_add = [expr("In({}, {})".format(c, p))]
@@ -82,7 +82,7 @@ class AirCargoProblem(Problem):
             for a in self.airports:
                 for c in self.cargos:
                     for p in self.planes:
-                            precond_pos = [expr("In({}, {})".format(c, p)),expr("At({}, {})".format(p, a)) 
+                            precond_pos = [expr("In({}, {})".format(c, p)),expr("At({}, {})".format(p, a))
                                            ]
                             precond_neg = []
                             effect_add = [expr("At({}, {})".format(c, a))]
@@ -137,7 +137,7 @@ class AirCargoProblem(Problem):
                 if clause in kb.clauses:
                     is_possible = False
             if is_possible:
-                print("Action:" + str(action))
+                #print("Action:" + str(action))
                 possible_actions.append(action)
         return possible_actions
 
@@ -210,7 +210,7 @@ class AirCargoProblem(Problem):
         kb.tell(decode_state(node.state, self.state_map).pos_sentence())
         for clause in self.goal:
             if clause not in kb.clauses:
-                count=count +1 
+                count=count +1
         return count
 
 
@@ -251,20 +251,20 @@ def air_cargo_p2() -> AirCargoProblem:
            expr('At(P3, ATL)'),
            ]
     neg = [expr('At(C2, SFO)'),
-           expr('At(C2, ATL)'), 
+           expr('At(C2, ATL)'),
            expr('In(C2, P1)'),
            expr('In(C2, P2)'),
            expr('In(C2, P3)'),
            expr('At(C1, JFK)'),
-           expr('At(C1, ATL)'), 
+           expr('At(C1, ATL)'),
            expr('In(C1, P1)'),
            expr('In(C1, P2)'),
            expr('In(C1, P3)'),
            expr('At(C3, JFK)'),
-           expr('At(C3, SFO)'), 
+           expr('At(C3, SFO)'),
            expr('In(C3, P1)'),
            expr('In(C3, P2)'),
-           expr('In(C3, P3)'),           
+           expr('In(C3, P3)'),
            expr('At(P1, JFK)'),
            expr('At(P1, ATL)'),
            expr('At(P2, SFO)'),
@@ -291,25 +291,25 @@ def air_cargo_p3() -> AirCargoProblem:
            expr('At(P2, JFK)'),
            ]
     neg = [expr('At(C2, SFO)'),
-           expr('At(C2, ATL)'), 
-           expr('At(C2, ORD)'), 
+           expr('At(C2, ATL)'),
+           expr('At(C2, ORD)'),
            expr('In(C2, P1)'),
            expr('In(C2, P2)'),
            expr('At(C1, JFK)'),
-           expr('At(C1, ATL)'), 
+           expr('At(C1, ATL)'),
            expr('At(C1, ORD)'),
            expr('In(C1, P1)'),
            expr('In(C1, P2)'),
            expr('At(C3, JFK)'),
-           expr('At(C3, SFO)'), 
+           expr('At(C3, SFO)'),
            expr('At(C3, ORD)'),
            expr('In(C3, P1)'),
-           expr('In(C3, P2)'),    
-           expr('At(C3, JFK)'),
-           expr('At(C3, SFO)'), 
-           expr('At(C3, JFK)'),
-           expr('In(C3, P1)'),
-           expr('In(C3, P2)'), 
+           expr('In(C3, P2)'),
+           expr('At(C4, JFK)'),
+           expr('At(C4, SFO)'),
+           expr('At(C4, JFK)'),
+           expr('In(C4, P1)'),
+           expr('In(C4, P2)'),
            expr('At(P1, JFK)'),
            expr('At(P1, ATL)'),
            expr('At(P1, ORD)'),
