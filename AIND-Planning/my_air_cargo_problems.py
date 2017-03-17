@@ -8,6 +8,7 @@ from lp_utils import (
     FluentState, encode_state, decode_state,
 )
 from my_planning_graph import PlanningGraph
+from itertools import product,count
 
 
 class AirCargoProblem(Problem):
@@ -59,18 +60,14 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             '''
             loads = []
-            for a in self.airports:
-                for c in self.cargos:
-                    for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(c, a)),expr("At({}, {})".format(p, a))
-                                           ]
-                            precond_neg = []
-                            effect_add = [expr("In({}, {})".format(c, p))]
-                            effect_rem = [expr("At({}, {})".format(c, a))]
-                            load = Action(expr("Load({}, {}, {})".format(c, p, a)),
-                                         [precond_pos, precond_neg],
-                                         [effect_add, effect_rem])
-                            loads.append(load)
+            for a,c,p in product(self.airports,self.cargos,self.planes):
+              precond_pos = [expr("At({}, {})".format(c, a)),expr("At({}, {})".format(p, a))]
+              precond_neg = []
+              effect_add = [expr("In({}, {})".format(c, p))]
+              effect_rem = [expr("At({}, {})".format(c, a))]
+              load = Action(expr("Load({}, {}, {})".format(c, p, a)),
+                           [precond_pos, precond_neg],[effect_add, effect_rem])
+              loads.append(load)
             return loads
 
         def unload_actions():
@@ -79,18 +76,14 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             '''
             unloads = []
-            for a in self.airports:
-                for c in self.cargos:
-                    for p in self.planes:
-                            precond_pos = [expr("In({}, {})".format(c, p)),expr("At({}, {})".format(p, a))
-                                           ]
-                            precond_neg = []
-                            effect_add = [expr("At({}, {})".format(c, a))]
-                            effect_rem = [expr("In({}, {})".format(c, p))]
-                            unload = Action(expr("Unload({}, {}, {})".format(c, p, a)),
-                                         [precond_pos, precond_neg],
-                                         [effect_add, effect_rem])
-                            unloads.append(unload)
+            for a,c,p in product(self.airports,self.cargos,self.planes):
+              precond_pos = [expr("In({}, {})".format(c, p)),expr("At({}, {})".format(p, a))]
+              precond_neg = []
+              effect_add = [expr("At({}, {})".format(c, a))]
+              effect_rem = [expr("In({}, {})".format(c, p))]
+              unload = Action(expr("Unload({}, {}, {})".format(c, p, a)),
+                              [precond_pos, precond_neg],[effect_add, effect_rem])
+              unloads.append(unload)
             return unloads
 
         def fly_actions():
@@ -99,19 +92,16 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             '''
             flys = []
-            for fr in self.airports:
-                for to in self.airports:
-                    if fr != to:
-                        for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(p, fr)),
-                                           ]
-                            precond_neg = []
-                            effect_add = [expr("At({}, {})".format(p, to))]
-                            effect_rem = [expr("At({}, {})".format(p, fr))]
-                            fly = Action(expr("Fly({}, {}, {})".format(p, fr, to)),
-                                         [precond_pos, precond_neg],
-                                         [effect_add, effect_rem])
-                            flys.append(fly)
+            for p,fr,to in product(self.planes,self.airports,self.airports):
+              if (fr!=to):
+                precond_pos = [expr("At({}, {})".format(p, fr))]
+                precond_neg = []
+                effect_add = [expr("At({}, {})".format(p, to))]
+                effect_rem = [expr("At({}, {})".format(p, fr))]
+                fly = Action(expr("Fly({}, {}, {})".format(p, fr, to)),
+                          [precond_pos, precond_neg],
+                          [effect_add, effect_rem])
+                flys.append(fly)
             return flys
 
         return load_actions() + unload_actions() + fly_actions()
@@ -153,18 +143,14 @@ class AirCargoProblem(Problem):
         # TODO implement
         new_state = FluentState([], [])
         old_state = decode_state(state, self.state_map)
-        for fluent in old_state.pos:
-            if fluent not in action.effect_rem:
-                new_state.pos.append(fluent)
-        for fluent in action.effect_add:
-            if fluent not in new_state.pos:
-                new_state.pos.append(fluent)
-        for fluent in old_state.neg:
-            if fluent not in action.effect_add:
-                new_state.neg.append(fluent)
-        for fluent in action.effect_rem:
-            if fluent not in new_state.neg:
-                new_state.neg.append(fluent)
+        new_state.pos.extend(fluent  for fluent in old_state.pos
+                              if fluent not in action.effect_rem)
+        new_state.pos.extend(fluent for fluent in action.effect_add
+                              if fluent not in new_state.pos)
+        new_state.neg.extend(fluent for fluent in old_state.neg
+                              if fluent not in action.effect_add)
+        new_state.neg.extend(fluent for fluent in action.effect_rem
+                              if fluent not in new_state.neg)
         return encode_state(new_state, self.state_map)
 
     def goal_test(self, state: str) -> bool:
@@ -205,13 +191,10 @@ class AirCargoProblem(Problem):
         executed.
         '''
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
-        count=0
+        #count=0
         kb = PropKB()
         kb.tell(decode_state(node.state, self.state_map).pos_sentence())
-        for clause in self.goal:
-            if clause not in kb.clauses:
-                count=count +1
-        return count
+        return (len(list(clause for clause in self.goal if clause not in kb.clauses)))
 
 
 def air_cargo_p1() -> AirCargoProblem:
