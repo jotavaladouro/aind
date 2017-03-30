@@ -69,15 +69,18 @@ class SelectorBIC(ModelSelector):
     """
 
     def select(self):
-        """ select the best model for self.this_word based on
-        BIC score for n between self.min_n_components and self.max_n_components
-
-        :return: GaussianHMM object
-        """
-        warnings.filterwarnings("ignore", category=DeprecationWarning)
-
-        # TODO implement model selection based on BIC scores
-        raise NotImplementedError
+        best_model=None
+        best_score=float("inf")
+        for i in range(self.min_n_components,self.max_n_components+1):
+            try:
+                model_test=self.base_model(i).fit(self.X, self.lengths)
+                model_score=-2 * model_test.score(self.X, self.lengths) + i * math.log(len(self.lengths))
+                if model_score<best_score:
+                    best_model=model_test
+                    best_score=model_score
+            except:
+                pass
+        return best_model
 
 
 class SelectorDIC(ModelSelector):
@@ -100,9 +103,17 @@ class SelectorCV(ModelSelector):
     ''' select best model based on average log Likelihood of cross-validation folds
 
     '''
-
     def select(self):
-        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        best_model=None
+        best_score=float("-inf")
+        for i in range(self.min_n_components,self.max_n_components+1):
+            try:
+                model_test=self.base_model(i).fit(self.X, self.lengths)
+                model_score=model_test.score(self.X, self.lengths)
+                if model_score>best_score:
+                    best_model=model_test
+                    best_score=model_score
+            except:
+                pass
+        return best_model
 
-        # TODO implement model selection using CV
-        raise NotImplementedError
