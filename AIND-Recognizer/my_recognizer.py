@@ -46,69 +46,25 @@ def recognize(models: dict, test_set: SinglesData):
     return probabilities,guesses
 
 
+def recognize_gram_1(models: dict, test_set: SinglesData,model_arpa,C=7):
 
-def recognize_gram(models: dict, test_set: SinglesData,n_gram=1,C=1,n_sentence_max=float("inf")):
-    """ Recognize test word sequences from word models set
-
-   :param models: dict of trained models
-       {'SOMEWORD': GaussianHMM model object, 'SOMEOTHERWORD': GaussianHMM model object, ...}
-   :param test_set: SinglesData object
-   :return: (list, list)  as probabilities, guesses
-       both lists are ordered by the test set word_id
-       guesses is a list of the best guess words ordered by the test set word_id
-           ['WORDGUESS0', 'WORDGUESS1', 'WORDGUESS2',...]
-   """
-    if (n_gram<1):
-      probabilities,guesses=recognize(models,test_set)
-      return  guesses
-
-    def GetWordProbabilities(X, lengths ):
-      retorno={}
-      for word in models.keys():
-        try:
-          LogL = models[word].score(X, lengths)
-        except:
-          LogL=float("-inf")
-        retorno[word]=LogL
-      return retorno;
-    def GetGramProbabilities(model_arp,key_list,lst_previo,eos_=False):
-        #print("GetGramProbabilities : " + str(lst_previo))
-        n_word_complete=(n_gram-1)
-        if (len(lst_previo)>=n_word_complete):
-          if (n_word_complete>0):
-            if None not in lst_previo[-n_word_complete:]:
-              string_gran= ' '.join(lst_previo[-n_word_complete:]) + " "
-            else:
-              string_gran= ''
-          else:
-            string_gran= ''
-          sos_gran=False;
-        else:
-          if len(lst_previo)>0:
-            string_gran=' '.join(lst_previo) + " "
-          else:
-            string_gran=""
-          sos_gran=True;
+    def get_gram_probabilities(models: dict,sos_func,eos_func):
         dict_retorno={}
-        for word in key_list:
-          test_gran=string_gran +  word
+        for word in models.keys():
           try:
-            dict_retorno[word]=model_arp.log_s(test_gran ,sos=sos_gran, eos=eos_)
+            dict_retorno[word]=model_arpa.log_s(word ,sos=sos_func, eos=eos_func)
           except:
-            #print("GetGramProbabilities : except <" + word + "< " +  str(lst_previo) + "-->" + test_gran + "<")
             dict_retorno[word]=None
         key,minimo=min(dict_retorno.items())
-        for word in key_list:
+        for word in models.keys():
             if dict_retorno[word]==None:
               dict_retorno[word]=minimo
-        #print(dict_retorno)
         return dict_retorno;
 
     def Guess(dict_word_p, dict_word_gram):
         retorno=None;
         p_retorno=float("-inf")
         for word in dict_word_p.keys():
-          #print("Compare " + word + " " + str(dict_word_p[word]) + " " + str(dict_word_gram[word]))
             try:
               p= dict_word_p[word]+ C * dict_word_gram[word]
             except:
@@ -116,107 +72,45 @@ def recognize_gram(models: dict, test_set: SinglesData,n_gram=1,C=1,n_sentence_m
             if p>p_retorno:
               retorno=word
               p_retorno=p
-
         return retorno;
 
-
-    models_arpa = arpa.loadf("devel-lm-M3.sri.lm")
-    model_arpa = models_arpa[0]
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
-    probabilities = []
-    guesses = []
-    n_sentence=0
+    probabilities,guesses=recognize(models,test_set)
+    guesses=[]
     for sentences_id in test_set.sentences_index:
-      guesses_sentence=[]
-      if n_sentence>=n_sentence_max:
-        guesses = guesses  + [1] * (test_set.num_items - len(guesses))
-        return guesses
-      n_sentence=n_sentence +1
       for n in range(len(test_set.sentences_index[sentences_id])):
           word_id=test_set.sentences_index[sentences_id][n]
-          if n==range(len(test_set.sentences_index[sentences_id])):
-            eos_gram=True
-          else:
-            eos_gram=False
-          #print("Word test " + str(word_id) )
-          #print("Sentence " + str(sentences_id) + " index in sentence " + str(n) + " indice "  + str(word_id))
-          X, lengths=test_set.get_item_Xlengths(word_id)
-          dict_word_p=GetWordProbabilities(X, lengths)
-          dict_word_p_gram=GetGramProbabilities(model_arpa,dict_word_p.keys(),guesses_sentence,eos_=eos_gram);
-          guess=Guess(dict_word_p,dict_word_p_gram)
+          sos_main=False
+          eos_main=False
+          if (n==0):
+            sos_main=True
+          if n==len(test_set.sentences_index[sentences_id]):
+            eos_main=False
+          probabilities_gram=get_gram_probabilities(models,sos_main,eos_main)
+          guess=Guess(probabilities[word_id],probabilities_gram)
           guesses.append(guess)
-          if guess==None:
-            print("None guess " + str(sentences_id) + " " + str(n) + " " + str(guesses_sentence))
-            print(dict_word_p)
-            print(dict_word_p_gram)
-          #print(guess)
-          guesses_sentence.append(guess)
     return guesses
 
 
+def recognize_gram_2(models: dict, test_set: SinglesData,model_arpa,C=7):
 
-def recognize_gram_fix(models: dict, test_set: SinglesData,n_gram=1,C=1,n_sentence_max=float("inf")):
-    """ Recognize test word sequences from word models set
-
-   :param models: dict of trained models
-       {'SOMEWORD': GaussianHMM model object, 'SOMEOTHERWORD': GaussianHMM model object, ...}
-   :param test_set: SinglesData object
-   :return: (list, list)  as probabilities, guesses
-       both lists are ordered by the test set word_id
-       guesses is a list of the best guess words ordered by the test set word_id
-           ['WORDGUESS0', 'WORDGUESS1', 'WORDGUESS2',...]
-   """
-    if (n_gram<1):
-      probabilities,guesses=recognize(models,test_set)
-      return  guesses
-
-    def GetWordProbabilities(X, lengths ):
-      retorno={}
-      for word in models.keys():
-        try:
-          LogL = models[word].score(X, lengths)
-        except:
-          LogL=float("-inf")
-        retorno[word]=LogL
-      return retorno;
-    def GetGramProbabilities(model_arp,key_list,lst_previo,eos_=False):
-        #print("GetGramProbabilities : " + str(lst_previo))
-        n_word_complete=(n_gram-1)
-        if (len(lst_previo)>=n_word_complete):
-          if (n_word_complete>0):
-            if None not in lst_previo[-n_word_complete:]:
-              string_gran= ' '.join(lst_previo[-n_word_complete:]) + " "
-            else:
-              string_gran= ''
-          else:
-            string_gran= ''
-          sos_gran=False;
-        else:
-          if len(lst_previo)>0:
-            string_gran=' '.join(lst_previo) + " "
-          else:
-            string_gran=""
-          sos_gran=True;
+    def get_gram_2_probabilities_total(models: dict,sos_func,eos_func):
         dict_retorno={}
-        for word in key_list:
-          test_gran=string_gran +  word
+        list_combine=[[word1,word2] for word1 in models.keys() for word2 in  models.keys() ]
+        for lst_words in list_combine:
           try:
-            dict_retorno[word]=model_arp.log_s(test_gran ,sos=sos_gran, eos=eos_)
+            dict_retorno[lst_words]=model_arpa.log_s(lst_words ,sos=sos_func, eos=eos_func)
           except:
-            #print("GetGramProbabilities : except <" + word + "< " +  str(lst_previo) + "-->" + test_gran + "<")
-            dict_retorno[word]=None
+            dict_retorno[lst_words]=None
         key,minimo=min(dict_retorno.items())
-        for word in key_list:
-            if dict_retorno[word]==None:
-              dict_retorno[word]=minimo
-        #print(dict_retorno)
+        for lst_words in dict_retorno.keys():
+            if dict_retorno[lst_words]==None:
+              dict_retorno[lst_words]=minimo
         return dict_retorno;
 
-    def Guess(dict_word_p, dict_word_gram):
+    def Guess_2_total(dict_word_p1,dict_word_p2, dict_word_gram):
         retorno=None;
         p_retorno=float("-inf")
         for word in dict_word_p.keys():
-          #print("Compare " + word + " " + str(dict_word_p[word]) + " " + str(dict_word_gram[word]))
             try:
               p= dict_word_p[word]+ C * dict_word_gram[word]
             except:
@@ -224,39 +118,21 @@ def recognize_gram_fix(models: dict, test_set: SinglesData,n_gram=1,C=1,n_senten
             if p>p_retorno:
               retorno=word
               p_retorno=p
-
         return retorno;
 
-
-    models_arpa = arpa.loadf("devel-lm-M3.sri.lm")
-    model_arpa = models_arpa[0]
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
-    probabilities = []
-    guesses = []
-    n_sentence=0
+    probabilities,guesses=recognize(models,test_set)
+    guesses=[]
     for sentences_id in test_set.sentences_index:
-      guesses_sentence=[]
-      if n_sentence>=n_sentence_max:
-        guesses = guesses  + [1] * (test_set.num_items - len(guesses))
-        return guesses
-      n_sentence=n_sentence +1
+
       for n in range(len(test_set.sentences_index[sentences_id])):
           word_id=test_set.sentences_index[sentences_id][n]
-          if n==range(len(test_set.sentences_index[sentences_id])):
-            eos_gram=True
-          else:
-            eos_gram=False
-          #print("Word test " + str(word_id) )
-          #print("Sentence " + str(sentences_id) + " index in sentence " + str(n) + " indice "  + str(word_id))
-          X, lengths=test_set.get_item_Xlengths(word_id)
-          dict_word_p=GetWordProbabilities(X, lengths)
-          dict_word_p_gram=GetGramProbabilities(model_arpa,dict_word_p.keys(),guesses_sentence,eos_=eos_gram);
-          guess=Guess(dict_word_p,dict_word_p_gram)
+          sos_main=False
+          eos_main=False
+          if (n==0):
+            sos_main=True
+          if n==len(test_set.sentences_index[sentences_id]):
+            eos_main=False
+          probabilities_gram=get_gram_probabilities(models,sos_main,eos_main)
+          guess=Guess(probabilities[word_id],probabilities_gram)
           guesses.append(guess)
-          if guess==None:
-            print("None guess " + str(sentences_id) + " " + str(n) + " " + str(guesses_sentence))
-            print(dict_word_p)
-            print(dict_word_p_gram)
-          #print(guess)
-          guesses_sentence.append(guess)
     return guesses
