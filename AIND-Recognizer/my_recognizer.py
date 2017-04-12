@@ -21,6 +21,8 @@ def recognize(models: dict, test_set: SinglesData):
    """
 
     def GetProbabilities(X, lengths ):
+      ''' For a secuence, return de probabilities of every word and
+          the word with best score '''
       retorno={}
       word_guesses=None
       word_guesses_logL=float("-inf")
@@ -49,9 +51,13 @@ def recognize(models: dict, test_set: SinglesData):
 
 def recognize_gram_1(models: dict, test_set: SinglesData,model_arpa,C=7):
 
-    def get_gram_probabilities(models: dict,sos_func,eos_func):
+    def get_gram_probabilities(lst_word,sos_func,eos_func):
+        ''' Parameter: lst_word .- lista palabras
+                        sos_func.- Start of sentence (bool)
+                        eos_func .- End of sentence (bool)
+            return a dictionary with a word and its gram probabilities'''
         dict_retorno={}
-        for word in models.keys():
+        for word in lst_word:
           try:
             if sos_func:
               if eos_func:
@@ -67,12 +73,15 @@ def recognize_gram_1(models: dict, test_set: SinglesData,model_arpa,C=7):
           except:
             dict_retorno[word]=None
         key,minimo=min(dict_retorno.items())
-        for word in models.keys():
+        for word in lst_word:
             if dict_retorno[word]==None:
               dict_retorno[word]=minimo
         return dict_retorno;
 
     def Guess(dict_word_p, dict_word_gram):
+        ''' dict_word_p Dictionary with word and the visual probabilaties
+            dict_word_gram Dictionary with word and the gram probabilaties
+            retorno .- Word guesses'''
         retorno=None;
         p_retorno=float("-inf")
         for word in dict_word_p.keys():
@@ -96,7 +105,7 @@ def recognize_gram_1(models: dict, test_set: SinglesData,model_arpa,C=7):
             sos_main=True
           if n==len(test_set.sentences_index[sentences_id]):
             eos_main=True
-          probabilities_gram=get_gram_probabilities(models,sos_main,eos_main)
+          probabilities_gram=get_gram_probabilities(models.keys(),sos_main,eos_main)
           guess=Guess(probabilities[word_id],probabilities_gram)
           guesses.append(guess)
     return guesses
@@ -105,6 +114,11 @@ def recognize_gram_1(models: dict, test_set: SinglesData,model_arpa,C=7):
 def recognize_gram_2(models: dict, test_set: SinglesData,model_arpa,C=10):
 
     def get_gram_2_probabilities_total(eos_f=False):
+        ''' Parameter: eos_f .- End of sentence (bool)
+            return a dictionary with:
+                  key: a list of 2  word
+                  value its gram probabilities'''
+
         dict_retorno={}
         list_combine=[[word1,word2] for word1 in models.keys() for word2 in  models.keys() ]
         for (w1,w2) in list_combine:
@@ -125,6 +139,10 @@ def recognize_gram_2(models: dict, test_set: SinglesData,model_arpa,C=10):
         return dict_retorno;
 
     def Guess_2_total(dict_word_p1,dict_word_p2,eos=False ):
+        ''' dict_word_p1 Dictionary with word and the visual probabilaties for 1 word in sentence
+            dict_word_p2 Dictionary with word and the visual probabilaties for 2 word in sentence
+            eo .- End of sentence (bool)
+            retorno .- word1,word2 guesses '''
         dict_word_gram=get_gram_2_probabilities_total( eos_f=eos)
         retorno=None;
         p_retorno=float("-inf")
@@ -137,9 +155,13 @@ def recognize_gram_2(models: dict, test_set: SinglesData,model_arpa,C=10):
               retorno=(word1,word2)
               p_retorno=p
         return retorno;
-    def get_gram_probabilities(models: dict,eos_func,lst_prev):
+    def get_gram_probabilities(lst_words,eos_func,lst_prev):
+        ''' Parameter: lst_word .- posible word list
+                        eos_func .- End of sentence (bool)
+                        lst_prev .- Previous word guesses
+            return a dictionary with a word and its gram probabilities'''
         dict_retorno={}
-        for word in models.keys():
+        for word in lst_words:
           try:
             if (eos_func):
               dict_retorno[word]=model_arpa.log_s(lst_prev[-1] + " " +word)
@@ -148,11 +170,14 @@ def recognize_gram_2(models: dict, test_set: SinglesData,model_arpa,C=10):
           except:
             dict_retorno[word]=None
         key,minimo=min(dict_retorno.items())
-        for word in models.keys():
+        for word in lst_words:
             if dict_retorno[word]==None:
               dict_retorno[word]=minimo
         return dict_retorno;
     def Guess(dict_word_p, dict_word_gram):
+        ''' dict_word_p Dictionary with word and the visual probabilaties
+            dict_word_gram Dictionary with word and the gram probabilaties
+            retorno .- Word guesses'''
         retorno=None;
         p_retorno=float("-inf")
         for word in dict_word_p.keys():
@@ -175,17 +200,19 @@ def recognize_gram_2(models: dict, test_set: SinglesData,model_arpa,C=10):
         eos=True
       else:
         eos=False
+      # Guess first 2 words of the sentence
       (first_gueses1,first_gueses2)=Guess_2_total(probabilities[word_id1],probabilities[word_id2])
       guesses.append(first_gueses1)
       guesses.append(first_gueses2)
       guesses_sentence.append(first_gueses1)
       guesses_sentence.append(first_gueses2)
       for n in range(2,len(test_set.sentences_index[sentences_id])):
+          # Guess word by word
           word_id=test_set.sentences_index[sentences_id][n]
           eos_main=False
           if n==len(test_set.sentences_index[sentences_id]):
             eos_main=True
-          probabilities_gram=get_gram_probabilities(models,eos_main,guesses_sentence)
+          probabilities_gram=get_gram_probabilities(models.keys(),eos_main,guesses_sentence)
           guess=Guess(probabilities[word_id],probabilities_gram)
           guesses.append(guess)
           guesses_sentence.append(guess)

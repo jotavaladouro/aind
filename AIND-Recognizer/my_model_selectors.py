@@ -71,10 +71,12 @@ class SelectorBIC(ModelSelector):
     def select(self):
         best_model=None
         best_score=float("inf")
+
         for i in range(self.min_n_components,self.max_n_components+1):
+            p= 2 * i * len(self.X[0])
             try:
                 model_test=self.base_model(i).fit(self.X, self.lengths)
-                model_score=-2 * model_test.score(self.X, self.lengths) + i * math.log(len(self.lengths))
+                model_score=-2 * model_test.score(self.X, self.lengths) + p * math.log(len(self.lengths))
                 if model_score<best_score:
                     best_model=model_test
                     best_score=model_score
@@ -91,12 +93,10 @@ class SelectorDIC(ModelSelector):
     http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.58.6208&rep=rep1&type=pdf
     DIC = log(P(X(i)) - 1/(M-1)SUM(log(P(X(all but i))
     '''
-
-
-
     def select(self):
-
         def get_other_score(model):
+            '''Get the score of the model with other words
+                return the score '''
             score=0
             len_others=0
             for w in self.words:
@@ -104,8 +104,7 @@ class SelectorDIC(ModelSelector):
                     X, lengths=self.hwords[w]
                     score = score  + model.score(X, lengths)
                     len_others=len_others + len(lengths)
-            return  1 / (len_others - 1) * score
-
+            return  1 / (len_others) * score
         best_model=None
         best_score=float("-inf")
         for i in range(self.min_n_components,self.max_n_components+1):
@@ -127,11 +126,10 @@ class SelectorCV(ModelSelector):
     ''' select best model based on average log Likelihood of cross-validation folds
 
     '''
-
-
-
     def select(self):
         def model_select_cross(i):
+            '''For a (i)n_components choose the best model
+                return the best model and it score '''
             split_method = KFold()
             best_model=None
             best_score=float("-inf")
@@ -152,11 +150,12 @@ class SelectorCV(ModelSelector):
         best_score=float("-inf")
         for i in range(self.min_n_components,self.max_n_components+1):
             if (len(self.sequences))<3:
+                # If we do not have enought sequences, fit and score with all secuences.
                 try:
                     model_test=self.base_model(i).fit(self.X,self.lengths)
                     model_score=model_test.score(self.X,self.lengths)
                 except:
-                    pass
+                    model_score=float("-inf")
             else:
                 model_test,model_score=model_select_cross(i)
             if model_score>best_score:
