@@ -127,17 +127,40 @@ class SelectorCV(ModelSelector):
     ''' select best model based on average log Likelihood of cross-validation folds
 
     '''
+
+
+
     def select(self):
+        def model_select_cross(i):
+            split_method = KFold()
+            best_model=None
+            best_score=float("-inf")
+            for cv_train_idx, cv_test_idx in split_method.split(self.sequences):
+                try:
+                    X_train,lengths_train=combine_sequences(cv_train_idx, self.sequences)
+                    X_test,lengths_test=combine_sequences(cv_test_idx, self.sequences)
+                    model_test=self.base_model(i).fit(X_train,lengths_train)
+                    model_score=model_test.score(X_test,lengths_test)
+                    if model_score>best_score:
+                        best_model=model_test
+                        best_score=model_score
+                except:
+                    pass
+            return best_model,best_score
+
         best_model=None
         best_score=float("-inf")
         for i in range(self.min_n_components,self.max_n_components+1):
-            try:
-                model_test=self.base_model(i).fit(self.X, self.lengths)
-                model_score=model_test.score(self.X, self.lengths)
-                if model_score>best_score:
-                    best_model=model_test
-                    best_score=model_score
-            except:
-                pass
+            if (len(self.sequences))<3:
+                try:
+                    model_test=self.base_model(i).fit(self.X,self.lengths)
+                    model_score=model_test.score(self.X,self.lengths)
+                except:
+                    pass
+            else:
+                model_test,model_score=model_select_cross(i)
+            if model_score>best_score:
+                best_model=model_test
+                best_score=model_score
         return best_model
 
