@@ -73,7 +73,7 @@ class SelectorBIC(ModelSelector):
         best_score=float("inf")
 
         for i in range(self.min_n_components,self.max_n_components+1):
-            p= 2 * i * len(self.X[0])
+            p= (i**2) + 2*len(self.X[0])*i
             try:
                 model_test=self.base_model(i).fit(self.X, self.lengths)
                 model_score=-2 * model_test.score(self.X, self.lengths) + p * math.log(len(self.lengths))
@@ -116,7 +116,6 @@ class SelectorDIC(ModelSelector):
                     best_model=model_test
                     best_score=model_score
             except Exception as inst:
-                #print(inst)
                 pass
         return best_model
 
