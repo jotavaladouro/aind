@@ -1,37 +1,37 @@
 # AIND CODE
 Code developed by jotavaladouro during the Artificial Intelligence (AIND) nanodegree of Udacity.
 
-#List of projects
+# List of projects
 
 ## 1 Term
-###AIND-Constraint-Satisfaction
+### AIND-Constraint-Satisfaction
 Solve the N-Queens Problem
 
 Algorithms: **constraint satisfaction and backtracking search.**
 
 Library: **SymPy**.
 
-###AIND-Planning
+### AIND-Planning
 Air cargo problem solved using different algorithms and compare their results:
 
 Algorithms :  **breadth-first,depth-first search, heuristic, Planning Graph.**
 
-###AIND-Simulated_Annealing
+### AIND-Simulated_Annealing
 The travel salesman problem.
 
 Algorithms: **simulated annealing**
 
-###Aind-isolation
+### Aind-isolation
 Develop a game playing agent for the isolation game.
 
 Algorithms: **minimax search with alpha-beta pruning, fixed-depth, and iterative deepening search.**
 
-###Aind-sudoku
+### Aind-sudoku
 Solve sudoku.
 
 Algorithms:**constraint propagation**.
 
-###AIND-Recognizer
+### AIND-Recognizer
 Recognize words for American Sign Language video sequences.
 
 Algorithms: **hidden Markov models (HMM's)**.
@@ -81,16 +81,16 @@ Algorithms: **Haar feature-based cascade classifiers,pre-trained ResNet-50, CNN,
 Library: **OpenCV,Keras**
 
 ## NLP
-###AIND-NLP-Bookworm
+### AIND-NLP-Bookworm
  Use **IBM Watson's NLP** Services to create a simple question-answering system.
-###AIND-NLP
+### AIND-NLP
 Sentiment Analysis on the IMDB database. Testing different algorithm:
 
 Algorithms: **Bag-of-Words and Gaussian Naive Bayes;  Bag-of-Words and Gradient-Boosted Decision Tree; LSTM**.
 
 Libraries: **Keras, BeautifulSoup**
 
-###aind2-nlp-capstone
+### aind2-nlp-capstone
 Build a deep neural network that functions as part of an end-to-end machine translation pipeline.
 
 Algorithms: **RNN, embedding, bidirectional RNN, Encoder-Decoder RNN**.
