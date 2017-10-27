@@ -7,6 +7,7 @@ Code developed by jotavaladouro during the Artificial Intelligence (AIND) nanode
 ### AIND-Constraint-Satisfaction
 Solve the N-Queens Problem
 
+
 Algorithms: **constraint satisfaction and backtracking search.**
 
 Library: **SymPy**.
